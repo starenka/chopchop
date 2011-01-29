@@ -1,3 +1,6 @@
+ABOUT
+=====
+
 ChopChop is a simple app for viewing and filtering events logged into MongoDb. It's build on
 Flask (http://flask.pocoo.org/), Jinja2 (http://jinja.pocoo.org/) and Mongokit (https://github.com/namlook/mongokit).
 I've used CouchDB's admin interface fancy design & graphics.
@@ -16,3 +19,9 @@ mongolog (https://github.com/andreisavu/mongodb-log) so typical row looks like:
 nevertheless you can modify the template to suit your "scheme" in a breeze.
 
 To see it in action, try this screenshot http://junk.starenka.net/chopchop.png
+
+INSTALL
+=======
+
+To setup the app, just edit settings.py.fixme and database.py.fixme to suit your needs and remove the fixme extensions.
+You should also edit path in your chopchop.wsgi file.
