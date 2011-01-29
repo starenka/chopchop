@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block content %}
+	<h2>Logged errors for<em>{% if filter.projects %}: {{filter.projects}}
+	{% else %} any project {% endif %}</em></h2>
+	{% include 'toolbar.html' %}
+	{% include 'items.html' %}
+{% endblock %}

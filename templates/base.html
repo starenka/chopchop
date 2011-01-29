@@ -1,0 +1,16 @@
+<!doctype html>
+<title>Chop-chop! :: {{title}}</title>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/screen.css') }}">
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.4.4.min.js') }}" ></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/chopchop.js') }}" ></script>
+<script type="text/javascript">base_url = "{{ request.base_url }}";</script>
+<h1><strong>{{title}}</strong></h1>
+<div id="content">		
+	{% block content %}{% endblock %}
+	<div id="credits">
+		&copy <a href="http://www.starenka.net" target="_blank">starenka</a> 2o1o, 
+		powered by <a href="http://flask.pocoo.org" target="_blank">Flask</a>
+		querying <a href="http://www.mongodb.org/" target="_blank">MongoDB</a>
+		using <a href="http://couchdb.apache.org" target="_blank">CouchDB</a> admin CSS.
+	</div>
+</div>

@@ -1,0 +1,43 @@
+<table class="listing">
+	<thead>
+		<tr>
+			<th><span>message</span></th>
+			<th><span>project</span></th>
+			<th><span>location</span></th>
+			<th{% if sort.by == 'time' and sort.direction == -1 %} class="_desc"{% endif %}"><span>stamp</span></th>
+		</tr>
+	</thead>
+	<tbody class="content">
+{% for item in items %}
+	<tr class="{{item.level}} {{ loop.cycle('odd','even') }}">
+		<td><img class="status" src="/static/gfx/{{item.level}}.png" alt="{{item.level}}"/>{{item.msg}}
+		{% if item.exc_info %}<br/><small>{{item.exc_info}}</small>{% endif %}</td>
+		<td>{{item.name}} <em><small>{{item.user}}@{{item.host}}<small></em></td>
+		<td>{{item.file|filename}}:{{item.line_no}} <small>{{item.funcname}}</small></td>
+		<td><small>{{item.time|datetimeformat}}</small></td>
+	</tr>	
+{% endfor %}
+	</tbody>
+	<tbody class="footer">
+		<tr>
+			<td colspan=4>
+				<div id="paging">
+	                {% if pagination.offset > 0 %}
+					<a id="p-{{pagination.offset-1}}" class="pagination" href="#">← Previous Page</a> |
+					{% endif %}
+					<label>Records per page:
+						<input id="per_page" type="search" class="input mini" value="{{pagination.per_page}}" placeholder="30" name="per_page"/>
+					</label>
+					{% if (pagination.offset+1)*pagination.per_page < pagination.total %} 
+					 |
+	                <a id="p-{{pagination.offset+1}}" class="pagination" href="#">Next Page →</a>
+					{% endif %}
+              	</div>				
+				Showing records [{{pagination.per_page*pagination.offset+1}}:
+				{% if (pagination.offset+1)*pagination.per_page > pagination.total %}{{pagination.total}}
+				{% else %}{{(pagination.offset+1)*pagination.per_page}}
+				{%endif%}] from <strong>{{pagination.total}}</strong>
+				</td>
+		</tr>
+	</tbody>
+</table>

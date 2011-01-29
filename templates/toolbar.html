@@ -1,0 +1,44 @@
+<ul id="toolbar">
+	{% for level in levels %}
+	<li><button id="{{level}}" class="{% if level in filter.levels %} active{% endif %}">{{level}}</button></li>
+	{% endfor %}
+	<div id="jumpto">
+		<table>
+			<tr>
+				<td colspan="8" align="right">
+					<!--<a id="refresh">
+						<img src="{{ url_for('static', filename='gfx/load_small.png') }}"/>&nbsp;refresh
+					</a>
+					-->
+					<a id="show-more-qry">
+						<img src="{{ url_for('static', filename='gfx/run_small.png') }}"/>&nbsp;show query
+					</a>
+					<a id="reset">
+						<img src="{{ url_for('static', filename='gfx/delete_small.png') }}"/>&nbsp;reset filters
+					</a>
+					<a id="show-more-filter">
+						<img src="{{ url_for('static', filename='gfx/add_small.png') }}"/>&nbsp;toggle advanced filters
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td><label for="projects">Projects:</label></td>
+				<td><input id="projects" type="search" class="input" value="{{filter.projects}}" placeholder="project name[,another one]" name="projects"/></td>
+				<td><label for="projects">Contains <small>*<a href="http://www.pcre.org/pcre.txt">PCRE</a></small>:</label></td>
+				<td><input id="projects" type="search" class="input" value="{{filter.contains}}" placeholder="HTTP.*?404" name="contains"/></td>
+				<td><label for="start">From:</label></td>
+				<td><input type="search" value="{{filter.start}}" class="input smaller" placeholder="YYYY-MM-DD [HH:MM:SS]" name="start"/></td>
+				<td><label for="end">To:</label></td>
+				<td><input type="search" value="{{filter.end}}" class="input smaller" placeholder="YYYY-MM-DD [HH:MM:SS]" name="end"/></td>
+			</tr>
+			<tr id="more-filter" {% if basic %}style="display:none;"{% endif %}>
+				<td><label for="file">File <small>*<a href="http://www.pcre.org/pcre.txt">PCRE</a></small>:</label></td>
+				<td><input id="file" type="search" class="input" value="{{filter.file}}" placeholder="e.*py" name="file"/></td>				
+				<td><label for="funcname">Function <small>*<a href="http://www.pcre.org/pcre.txt">PCRE</a></small>:</label></td>
+				<td><input id="funcname" type="search" class="input" value="{{filter.funcname}}" placeholder="get_.*burger" name="funcname"/></td>				
+				<td colspan="4"></td>
+			</tr>
+		</table>
+	</div>		
+</ul>
+<div id="more-qry" style="display:none;"><code>{{query}}</code></div>
