@@ -8,14 +8,14 @@
 # @version:    1.1
 # @since       Nov 24, 2010
 
-import datetime
+import datetime,sys
 from flask import Flask, render_template, request
 from mongokit import Connection
 
 from filters import *
 
 app = Flask(__name__)
-for file in ['settings', 'database']: app.config.from_object(file)
+for file in ['settings']: app.config.from_object(file)
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 app.jinja_env.filters['datetimeformat'] = datetimeformat
 app.jinja_env.filters['filename'] = filename
@@ -27,9 +27,9 @@ db = con[app.config['MONGODB_NAME']][app.config['MONGODB_TABLE']]
 def index():
     filter = _parse_filter()
     q = db.find(filter['db']).\
-    sort(filter['sort']['by'], filter['sort']['direction']).\
-    skip(filter['pagination']['offset'] * filter['pagination']['per_page']).\
-    limit(filter['pagination']['per_page'])
+        sort(filter['sort']['by'], filter['sort']['direction']).\
+        skip(filter['pagination']['offset'] * filter['pagination']['per_page']).\
+        limit(filter['pagination']['per_page'])
     filter['pagination']['total'] = db.find(filter['db']).count()
     return render_template('dashboard.html', items=list(q),
                            query=q._Cursor__spec,
@@ -82,26 +82,21 @@ def _parse_filter():
             filter['db'][f] = {'$regex': '%s' % val}
             filter['raw'][f] = val
 
-    start = request.args.get('start')
-    try: start = datetime.datetime.strptime(start, '%Y-%m-%d')
-    except:
-        try: start = datetime.datetime.strptime(start, '%Y-%m-%d %H:%M')
-        except: start = False
-    end = request.args.get('end')
-    try: end = datetime.datetime.strptime(end, '%Y-%m-%d')
-    except:
-        try: end = datetime.datetime.strptime(end, '%Y-%m-%d %H:%M')
-        except: end = False
-
-    if start:
-        filter['db']['time'] = {'$gte': start}
-        filter['raw']['start'] = start.strftime('%Y-%m-%d %H:%M')
-    if end:
-        filter['db']['time'] = {'$lte': end}
-        filter['raw']['end'] = end.strftime('%Y-%m-%d %H:%M')
+    for field,op in {'start':'g','end':'l'}.items():
+        setattr(sys.modules[__name__],field,parse_date(request.args.get(field)))
+        if getattr(sys.modules[__name__],field):
+            filter['db']['time'] = {'$%ste'%op: getattr(sys.modules[__name__],field)}
+            filter['raw'][field] = getattr(sys.modules[__name__],field).strftime('%Y-%m-%d %H:%M')
 
     if start and end: filter['db']['time'] = {'$gte': start, '$lte': end}
     return filter
+
+def parse_date(date):
+    try: date = datetime.datetime.strptime(date, '%Y-%m-%d')
+    except:
+        try: date = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M')
+        except: date = None
+    return date
 
 if __name__ == '__main__':
     app.run()

@@ -23,5 +23,4 @@ To see it in action, try this screenshot http://junk.starenka.net/chopchop.png
 INSTALL
 =======
 
-To setup the app, just edit settings.py.fixme and database.py.fixme to suit your needs and remove the fixme extensions.
-You should also edit path in your chopchop.wsgi file.
+To setup the app, just edit settings.py.fixme and to suit your needs and remove the fixme extension. You should also edit path in your chopchop.wsgi file.
