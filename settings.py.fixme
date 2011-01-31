@@ -8,8 +8,13 @@
 # @version:    1.0
 # @since       Nov 24, 2010
 
-DEBUG = True
-SECRET_KEY = 'development key'
+DEBUG = False
+SECRET_KEY = 'inmahkeyboard'
+
+MONGODB_HOST = 'localhost'
+MONGODB_PORT = 27017
+MONGODB_NAME = 'logs'
+MONGODB_TABLE = 'logs'
 
 LEVELS = ['debug','info','warning','error','critical']
 PER_PAGE = 100
