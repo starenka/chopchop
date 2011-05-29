@@ -5,18 +5,17 @@
 # 
 # @author:     starenka
 # @email:      'moc]tod[liamg].T.E[0aknerats'[::-1]
-# @version:    1.1
+# @version:    1.1.1
 # @since       Nov 24, 2010
 
 import datetime,sys
 from flask import Flask, render_template, request
 from mongokit import Connection
 
-from filters import *
+from filters import datetimeformat, filename
 
 app = Flask(__name__)
-for file in ['settings']: app.config.from_object(file)
-app.config.from_envvar('FLASKR_SETTINGS', silent=True)
+app.config.from_object('settings')
 app.jinja_env.filters['datetimeformat'] = datetimeformat
 app.jinja_env.filters['filename'] = filename
 
@@ -83,7 +82,7 @@ def _parse_filter():
             filter['raw'][f] = val
 
     for field,op in {'start':'g','end':'l'}.items():
-        setattr(sys.modules[__name__],field,parse_date(request.args.get(field)))
+        setattr(sys.modules[__name__],field,_parse_date(request.args.get(field)))
         if getattr(sys.modules[__name__],field):
             filter['db']['time'] = {'$%ste'%op: getattr(sys.modules[__name__],field)}
             filter['raw'][field] = getattr(sys.modules[__name__],field).strftime('%Y-%m-%d %H:%M')
@@ -91,7 +90,7 @@ def _parse_filter():
     if start and end: filter['db']['time'] = {'$gte': start, '$lte': end}
     return filter
 
-def parse_date(date):
+def _parse_date(date):
     try: date = datetime.datetime.strptime(date, '%Y-%m-%d')
     except:
         try: date = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M')
