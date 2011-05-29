@@ -23,7 +23,7 @@ Setup
 
 To setup the app, just edit DB settings either in settings/base.py, settings/production.py or settings/local_empty.py to suit your needs. If you edit local_empty.py be sure to copy it as local.py in order to get loaded. The wsgi file should work w/out any tuning. Consult your web server docs to make wsgi work with your server. Sample vhost file for apache would look like this:
 
-        root@kosmik1:/home/starenka# cat /etc/apache2/sites-available/logs.localhost
+    root@kosmik1:/home/starenka# cat /etc/apache2/sites-available/logs.localhost
         <VirtualHost 127.0.0.1:80>
             ServerName logs.localhost
                 WSGIDaemonProcess chopchop user=starenka group=starenka threads=5
