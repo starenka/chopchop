@@ -59,7 +59,7 @@ supervisor:
       --master
       --no-orphans
       --max-requests 5000
-      --module logs
+      --module chopchop
       --callable app
     directory=/www/logs/
     stdout_logfile=/www/logs/uwsgi.log
