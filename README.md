@@ -21,13 +21,16 @@ To see it in action, try this screenshot http://junk.starenka.net/chopchop.png
 Setup
 -----
 
-To setup the app, just edit DB settings either in settings/base.py, settings/production.py or settings/local_empty.py to suit your needs. If you edit local_empty.py be sure to copy it as local.py in order to get loaded. The wsgi file should work w/out any tuning. Consult your web server docs to make wsgi work with your server. Sample vhost file for apache would look like this:
+To setup the app, just edit your settings either in settings/base.py (used both on dev and production), settings/production.py or settings/local_empty.py to suit your needs. If you edit local_empty.py be sure to copy it as local.py in order to get loaded during development.
+
+The WSGI file should work w/out any tuning. Consult your web server docs to make wsgi work with your server. Sample vhost file for Apache would look like this:
+
 
     root@kosmik1:/home/starenka# cat /etc/apache2/sites-available/logs.localhost
         <VirtualHost 127.0.0.1:80>
             ServerName logs.localhost
                 WSGIDaemonProcess chopchop user=starenka group=starenka threads=5
-                WSGIScriptAlias / /www/chopchop/chopchop.wsgi
+                WSGIScriptAlias / /www/chopchop/app.wsgi
 
                 <Directory /www/chopchop>
                     WSGIProcessGroup chopchop
@@ -37,6 +40,57 @@ To setup the app, just edit DB settings either in settings/base.py, settings/pro
                     Allow from all
                 </Directory>
         </VirtualHost>
+
+
+As for nginx and uWSGI & supervisor your config would look like this:
+
+supervisor:
+---
+
+    [program:logs.starenka.net]
+    command=/usr/local/bin/uwsgi
+      --socket /www/logs/uwsgi.sock
+      --pythonpath /www/logs
+      --touch-reload /www/logs/app.wsgi
+      --chmod-socket 666
+      --uid starenka
+      --gid starenka
+      --processes 1
+      --master
+      --no-orphans
+      --max-requests 5000
+      --module logs
+      --callable app
+    directory=/www/logs/
+    stdout_logfile=/www/logs/uwsgi.log
+    user=starenka
+    autostart=true
+    autorestart=true
+    redirect_stderr=true
+    stopsignal=QUIT
+
+nginx:
+---
+
+    server {
+            listen       80;
+            server_name  logs.starenka.net;
+            root    /www/logs/;
+
+            access_log  /www/logs/access.log;
+            error_log /www/logs/error.log;
+
+            location / {
+                    uwsgi_pass unix:///www/logs/uwsgi.sock;
+                    include        uwsgi_params;
+            }
+
+            location /static {
+                    alias /www/logs/static;
+            }
+    }
+
+
 
 Have fun!
 
