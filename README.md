@@ -3,7 +3,7 @@ ChopChop : Simple web interface to list & filter your centralized logs
 
 ChopChop is a simple app for viewing and filtering events logged into MongoDb. It's build on Flask (http://flask.pocoo.org/), Jinja2 (http://jinja.pocoo.org/) and Mongokit (https://github.com/namlook/mongokit). I've used CouchDB's admin interface fancy design & graphics.
 
-The app expects the log table to have columns used by python logging module extension for MongoDb mongolog (https://github.com/andreisavu/mongodb-log) so typical row looks like:
+The app expects the log table to have columns used by python logging module extension for MongoDb log4mongo (https://github.com/log4mongo/log4mongo-python) so typical row looks like:
 
     {   "_id" : ObjectId("4e9dc89b4379463df4000001"),
         "lineNumber" : 70,
