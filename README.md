@@ -5,12 +5,15 @@ ChopChop is a simple app for viewing and filtering events logged into MongoDb. I
 
 The app expects the log table to have columns used by python logging module extension for MongoDb mongolog (https://github.com/andreisavu/mongodb-log) so typical row looks like:
 
-    { "_id" : ObjectId("4d402bd7437946334300000f"), "args" : [ ],
-        "name" : "traffic-info", "level" : "debug", "line_no" : 154,
-        "funcname" : "notify", "host" : "kosmik1", "user" : "starenka",
-        "file" : "./tinfo.py", "time" : "Wed Jan 26 2011 16:12:39 GMT+0100 (CET)",
-        "msg" : "Item 8ad5a3b7-2d98-5ff7-012d-c13ce5c01319 has no wanted event code",
-        "exc_info" : null
+    {   "_id" : ObjectId("4e9dc89b4379463df4000001"),
+        "lineNumber" : 70,
+        "thread" : NumberLong("139816043067136"),
+        "level" : "INFO",
+        "timestamp" : { "t" : 1318963355000, "i" : 886 },
+        "message" : "Job finished ['./newsletter.py', '-r', '-t'], time elapsed 0:00:00.143399",
+        "fileName" : "/xxx/meh.py",
+        "method" : "close_job",
+        "loggerName" : "meh"
     }
 
 nevertheless you can modify the template to suit your "scheme" in a breeze.

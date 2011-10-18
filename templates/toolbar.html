@@ -32,10 +32,10 @@
 				<td><input type="search" value="{{filter.end}}" class="input smaller" placeholder="YYYY-MM-DD [HH:MM:SS]" name="end"/></td>
 			</tr>
 			<tr id="more-filter" {% if basic %}style="display:none;"{% endif %}>
-				<td><label for="file">File <small>*<a href="http://www.pcre.org/pcre.txt">PCRE</a></small>:</label></td>
-				<td><input id="file" type="search" class="input" value="{{filter.file}}" placeholder="e.*py" name="file"/></td>				
-				<td><label for="funcname">Function <small>*<a href="http://www.pcre.org/pcre.txt">PCRE</a></small>:</label></td>
-				<td><input id="funcname" type="search" class="input" value="{{filter.funcname}}" placeholder="get_.*burger" name="funcname"/></td>				
+				<td><label for="fileName">File <small>*<a href="http://www.pcre.org/pcre.txt">PCRE</a></small>:</label></td>
+				<td><input id="fileName" type="search" class="input" value="{{filter.fileName}}" placeholder="e.*py" name="fileName"/></td>
+				<td><label for="method">Function <small>*<a href="http://www.pcre.org/pcre.txt">PCRE</a></small>:</label></td>
+				<td><input id="method" type="search" class="input" value="{{filter.method}}" placeholder="get_.*burger" name="method"/></td>
 				<td colspan="4"></td>
 			</tr>
 		</table>

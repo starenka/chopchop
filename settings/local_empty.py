@@ -6,3 +6,5 @@ MONGODB_HOST = 'localhost'
 MONGODB_PORT = 27017
 MONGODB_NAME = 'logs'
 MONGODB_TABLE = 'logs'
+MONGODB_USER = 'logs'
+MONGODB_PASSWORD = 'logs'

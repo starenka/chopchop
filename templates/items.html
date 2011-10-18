@@ -4,17 +4,17 @@
 			<th><span>message</span></th>
 			<th><span>project</span></th>
 			<th><span>location</span></th>
-			<th{% if sort.by == 'time' and sort.direction == -1 %} class="_desc"{% endif %}"><span>stamp</span></th>
+			<th{% if sort.by == 'timestamp' and sort.direction == -1 %} class="_desc"{% endif %}"><span>stamp</span></th>
 		</tr>
 	</thead>
 	<tbody class="content">
 {% for item in items %}
 	<tr class="{{item.level}} {{ loop.cycle('odd','even') }}">
-		<td><img class="status" src="/static/gfx/{{item.level}}.png" alt="{{item.level}}"/>{{item.msg}}
+		<td><img class="status" src="/static/gfx/{{item.level|lower}}.png" alt="{{item.level}}"/>{{item.message}}
 		{% if item.exc_info %}<br/><small>{{item.exc_info}}</small>{% endif %}</td>
-		<td>{{item.name}} <em><small>{{item.user}}@{{item.host}}<small></em></td>
-		<td>{{item.file|filename}}:{{item.line_no}} <small>{{item.funcname}}</small></td>
-		<td><small>{{item.time|datetimeformat}}</small></td>
+		<td>{{item.loggerName}}</td>
+		<td>{{item.fileName|filename}}:{{item.lineNumber}} <small>{{item.method}} (#{{item.thread}})</small></td>
+		<td><small>{{item.timestamp|datetimeformat}}</small></td>
 	</tr>	
 {% endfor %}
 	</tbody>
