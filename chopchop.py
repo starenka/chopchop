@@ -9,8 +9,11 @@
 # @since       Nov 24, 2010
 
 import datetime, sys
+from bson.timestamp import Timestamp
 from flask import Flask, render_template, request
 from mongokit import Connection
+
+from threading import currentThread
 
 from filters import datetimeformat, filename
 
@@ -19,19 +22,47 @@ app.config.from_object('settings')
 app.jinja_env.filters['datetimeformat'] = datetimeformat
 app.jinja_env.filters['filename'] = filename
 
-con = Connection(app.config['MONGODB_HOST'], app.config['MONGODB_PORT'])
-db = con[app.config['MONGODB_NAME']][app.config['MONGODB_TABLE']]
-if all([app.config['MONGODB_USER'], app.config['MONGODB_PASSWORD']]):
-    con.db.authenticate(app.config['MONGODB_USER'], app.config['MONGODB_PASSWORD'])
+class ConnectionPool(object):
+    def __init__(self):
+        super(ConnectionPool, self).__init__()
+
+        self.pool = {}
+
+    def make_connection(self):
+        con = Connection(app.config['MONGODB_HOST'], app.config['MONGODB_PORT'])
+        db = con[app.config['MONGODB_NAME']]
+        if app.config['MONGODB_USER'] and app.config['MONGODB_PASSWORD']:
+            auth = db.authenticate(app.config['MONGODB_USER'], app.config['MONGODB_PASSWORD'])
+            if not auth:
+                raise AssertionError('Failed to auth to %s:%s/%s as %s' % (
+                    app.config['MONGODB_HOST'],
+                    app.config['MONGODB_PORT'],
+                    app.config['MONGODB_NAME'],
+                    app.config['MONGODB_USER'])
+                )
+        db = db[app.config['MONGODB_TABLE']]
+        return db
+
+    def get_connection(self):
+        if currentThread() not in self.pool:
+            self.pool[currentThread()] = self.make_connection()
+
+        return self.pool[currentThread()]
+
+    @property
+    def con(self):
+        return self.get_connection()
+
+db = ConnectionPool()
 
 @app.route('/')
 def index():
     filter = _parse_filter()
-    q = db.find(filter['db']).\
-    sort(filter['sort']['by'], filter['sort']['direction']).\
-    skip(filter['pagination']['offset'] * filter['pagination']['per_page']).\
-    limit(filter['pagination']['per_page'])
-    filter['pagination']['total'] = db.find(filter['db']).count()
+    q = db.con.find(filter['db']).\
+        sort(filter['sort']['by'], filter['sort']['direction']).\
+        skip(filter['pagination']['offset'] * filter['pagination']['per_page']).\
+        limit(filter['pagination']['per_page'])
+    filter['pagination']['total'] = db.con.find(filter['db']).count()
     return render_template('dashboard.html', items=list(q),
                            query=q._Cursor__spec,
                            title="O HAI! CAN I HAS ERROR? YEZ! CHOP, CHOP!",
@@ -88,10 +119,11 @@ def _parse_filter():
     for field, op in {'start': 'g', 'end': 'l'}.items():
         setattr(sys.modules[__name__], field, _parse_date(request.args.get(field)))
         if getattr(sys.modules[__name__], field):
-            filter['db']['timestamp'] = {'$%ste' % op: getattr(sys.modules[__name__], field)}
+            filter['db']['timestamp'] = {'$%ste' % op: Timestamp(getattr(sys.modules[__name__], field),0)}
             filter['raw'][field] = getattr(sys.modules[__name__], field).strftime('%Y-%m-%d %H:%M')
 
     if start and end: filter['db']['timestamp'] = {'$gte': start, '$lte': end}
+    print filter
     return filter
 
 
