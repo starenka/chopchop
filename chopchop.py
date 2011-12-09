@@ -123,7 +123,6 @@ def _parse_filter():
             filter['raw'][field] = getattr(sys.modules[__name__], field).strftime('%Y-%m-%d %H:%M')
 
     if start and end: filter['db']['timestamp'] = {'$gte': start, '$lte': end}
-    print filter
     return filter
 
 

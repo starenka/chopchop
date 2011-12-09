@@ -15,5 +15,4 @@ def datetimeformat(value, format='%H:%M %d.%m/%y'):
 
 def filename(path):
     path = os.path.split(path)
-    print path[-1]
     return path[-1]
