@@ -10,7 +10,7 @@
 	<tbody class="content">
 {% for item in items %}
 	<tr class="{{item.level}} {{ loop.cycle('odd','even') }}">
-		<td><img class="status" src="/static/gfx/{{item.level|lower}}.png" alt="{{item.level}}"/>{{item.message}}
+		<td><a href="{{ url_for('index')}}?&id={{ item._id }}"><img class="status" src="/static/gfx/{{item.level|lower}}.png" alt="{{item.level}}"/></a>{{item.message}}
 		{% if item.exception %}<br/>
             <small>
                 <strong>{{item.exception.message}} ({{item.exception.code }})</strong><br/>

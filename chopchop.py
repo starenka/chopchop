@@ -10,6 +10,7 @@
 
 import datetime, sys
 from bson.timestamp import Timestamp
+from pymongo.objectid import ObjectId
 from flask import Flask, render_template, request
 from mongokit import Connection
 
@@ -90,9 +91,14 @@ def _parse_filter():
               'basic': True
     }
 
-    levels = request.args.getlist('levels') or app.config['LEVELS'][-2:]
-    filter['raw']['levels'] = levels
-    filter['db']['level'] = {'$in': levels}
+    id = request.args.get('id')
+    if id:
+        filter['db']['_id'] = ObjectId(id)
+        filter['raw']['_id'] = id
+    else:
+        levels = request.args.getlist('levels') or app.config['LEVELS'][-2:]
+        filter['raw']['levels'] = levels
+        filter['db']['level'] = {'$in': levels}
 
     per_page = request.args.get('per_page')
     if per_page and per_page.isdigit(): filter['pagination']['per_page'] = int(per_page)
@@ -123,6 +129,7 @@ def _parse_filter():
             filter['raw'][field] = getattr(sys.modules[__name__], field).strftime('%Y-%m-%d %H:%M')
 
     if start and end: filter['db']['timestamp'] = {'$gte': start, '$lte': end}
+
     return filter
 
 
