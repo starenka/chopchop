@@ -11,7 +11,12 @@
 {% for item in items %}
 	<tr class="{{item.level}} {{ loop.cycle('odd','even') }}">
 		<td><img class="status" src="/static/gfx/{{item.level|lower}}.png" alt="{{item.level}}"/>{{item.message}}
-		{% if item.exc_info %}<br/><small>{{item.exc_info}}</small>{% endif %}</td>
+		{% if item.exception %}<br/>
+            <small>
+                <strong>{{item.exception.message}} ({{item.exception.code }})</strong><br/>
+                <pre>{{item.exception.stackTrace }}</pre>
+            </small>
+        {% endif %}</td>
 		<td>{{item.loggerName}}</td>
 		<td>{{item.fileName|filename}}:{{item.lineNumber}} <small>{{item.method}} (#{{item.thread}})</small></td>
 		<td><small>{{item.timestamp|datetimeformat}}</small></td>
