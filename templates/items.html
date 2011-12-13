@@ -1,48 +1,58 @@
 <table class="listing">
-	<thead>
-		<tr>
-			<th><span>message</span></th>
-			<th><span>project</span></th>
-			<th><span>location</span></th>
-			<th{% if sort.by == 'timestamp' and sort.direction == -1 %} class="_desc"{% endif %}"><span>stamp</span></th>
-		</tr>
-	</thead>
-	<tbody class="content">
-{% for item in items %}
-	<tr class="{{item.level}} {{ loop.cycle('odd','even') }}">
-		<td><a href="{{ url_for('index')}}?&id={{ item._id }}"><img class="status" src="/static/gfx/{{item.level|lower}}.png" alt="{{item.level}}"/></a>{{item.message}}
-		{% if item.exception %}<br/>
+    <thead>
+    <tr>
+        <th><span>message</span></th>
+        <th><span>project</span></th>
+        <th><span>location</span></th>
+        <th
+        {% if sort.by == 'timestamp' and sort.direction == -1 %} class="_desc"{% endif %}"><span>stamp</span></th>
+    </tr>
+    </thead>
+    <tbody class="content">
+    {% for item in items %}
+    <tr class="{{item.level}} {{ loop.cycle('odd','even') }}">
+        <td><a href="{{ url_for('index')}}?&id={{ item._id }}"><img class="status"
+                                                                    src="/static/gfx/{{item.level|lower}}.png"
+                                                                    alt="{{item.level}}"/></a>{{item.message}}
+            {% if item.exception %}<br/>
             <small>
                 <strong>{{item.exception.message}} ({{item.exception.code }})</strong><br/>
                 <pre>{{item.exception.stackTrace }}</pre>
             </small>
-        {% endif %}</td>
-		<td>{{item.loggerName}}</td>
-		<td>{{item.fileName|filename}}:{{item.lineNumber}} <small>{{item.method}} (#{{item.thread}})</small></td>
-		<td><small>{{item.timestamp|datetimeformat}}</small></td>
-	</tr>	
-{% endfor %}
-	</tbody>
-	<tbody class="footer">
-		<tr>
-			<td colspan=4>
-				<div id="paging">
-	                {% if pagination.offset > 0 %}
-					<a id="p-{{pagination.offset-1}}" class="pagination" href="#">← Previous Page</a> |
-					{% endif %}
-					<label>Records per page:
-						<input id="per_page" type="search" class="input mini" value="{{pagination.per_page}}" placeholder="30" name="per_page"/>
-					</label>
-					{% if (pagination.offset+1)*pagination.per_page < pagination.total %} 
-					 |
-	                <a id="p-{{pagination.offset+1}}" class="pagination" href="#">Next Page →</a>
-					{% endif %}
-              	</div>				
-				Showing records [{{pagination.per_page*pagination.offset+1}}:
-				{% if (pagination.offset+1)*pagination.per_page > pagination.total %}{{pagination.total}}
-				{% else %}{{(pagination.offset+1)*pagination.per_page}}
-				{%endif%}] from <strong>{{pagination.total}}</strong>
-				</td>
-		</tr>
-	</tbody>
+            {% endif %}
+        </td>
+        <td>{{item.loggerName}}</td>
+        <td>{{item.fileName|filename}}:{{item.lineNumber}}
+            <small>{{item.method}} (#{{item.thread}})</small><br/>
+            <small>{{item.fileName}}</small>
+        </td>
+        <td>
+            <small>{{item.timestamp|datetimeformat}}</small>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+    <tbody class="footer">
+    <tr>
+        <td colspan=4>
+            <div id="paging">
+                {% if pagination.offset > 0 %}
+                <a id="p-{{pagination.offset-1}}" class="pagination" href="#">← Previous Page</a> |
+                {% endif %}
+                <label>Records per page:
+                    <input id="per_page" type="search" class="input mini" value="{{pagination.per_page}}"
+                           placeholder="30" name="per_page"/>
+                </label>
+                {% if (pagination.offset+1)*pagination.per_page < pagination.total %}
+                |
+                <a id="p-{{pagination.offset+1}}" class="pagination" href="#">Next Page →</a>
+                {% endif %}
+            </div>
+            Showing records [{{pagination.per_page*pagination.offset+1}}:
+            {% if (pagination.offset+1)*pagination.per_page > pagination.total %}{{pagination.total}}
+            {% else %}{{(pagination.offset+1)*pagination.per_page}}
+            {%endif%}] from <strong>{{pagination.total}}</strong>
+        </td>
+    </tr>
+    </tbody>
 </table>
