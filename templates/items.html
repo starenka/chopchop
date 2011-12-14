@@ -16,15 +16,15 @@
                                                                     alt="{{item.level}}"/></a>{{item.message}}
             {% if item.exception %}<br/>
             <small>
-                <strong>{{item.exception.message}} ({{item.exception.code }})</strong><br/>
+                {% if item.exception.message %}<strong>{{item.exception.message}} ({{item.exception.code }})</strong><br/>{% endif %}
                 <pre>{{item.exception.stackTrace }}</pre>
             </small>
             {% endif %}
         </td>
         <td>{{item.loggerName}}</td>
-        <td>{{item.fileName|filename}}:{{item.lineNumber}}
-            <small>{{item.method}} (#{{item.thread}})</small><br/>
-            <small>{{item.fileName}}</small>
+        <td>{% if item.fileName %}{{item.fileName|filename}}{% if item.lineNumber %}:{{item.lineNumber}}{% endif %}{% endif %}
+            {% if item.method %}<small>{{item.method}} (#{{item.thread}})</small>{% endif %}
+            {% if item.fileName %}<br/><small>{{item.fileName}}</small>{% endif %}
         </td>
         <td>
             <small>{{item.timestamp|datetimeformat}}</small>

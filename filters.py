@@ -14,5 +14,8 @@ def datetimeformat(value, format='%H:%M %d.%m/%y'):
     return value.as_datetime().strftime(format)
 
 def filename(path):
-    path = os.path.split(path)
-    return path[-1]
+    try:
+        path = os.path.split(path)
+        return path[-1]
+    except:
+        return path
