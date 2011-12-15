@@ -1,6 +1,6 @@
 <ul id="toolbar">
 	{% for level in levels %}
-	<li><button id="{{level}}" class="{% if level in filter.levels %} active{% endif %}">{{level}}</button></li>
+	<li><button id="{{level|lower}}" class="{% if level in filter.levels %} active{% endif %}">{{level}}</button></li>
 	{% endfor %}
 	<div id="jumpto">
 		<table>
