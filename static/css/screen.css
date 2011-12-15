@@ -600,11 +600,11 @@ form#replicator p.actions { padding: 1px; clear: left; margin: 0;
 
 td img { margin-right: 2px; vertical-align: text-bottom;}
 #toolbar { font-size: 11px; }
-#toolbar button#warning { background-image: url(../gfx/warning.png); }
-#toolbar button#critical { background-image: url(../gfx/critical.png); }
-#toolbar button#error { background-image: url(../gfx/error.png); }
-#toolbar button#debug { background-image: url(../gfx/debug.png); }
-#toolbar button#info { background-image: url(../gfx/info.png); }
+#toolbar button#WARNING { background-image: url(../gfx/warning.png); }
+#toolbar button#CRITICAL { background-image: url(../gfx/critical.png); }
+#toolbar button#ERROR { background-image: url(../gfx/error.png); }
+#toolbar button#DEBUG { background-image: url(../gfx/debug.png); }
+#toolbar button#INFO { background-image: url(../gfx/info.png); }
 #toolbar button.active { text-decoration: underline; }
 
 #toolbar a { font-weight: bold !important; line-height: 16px; vertical-align: middle; margin-right: 5px;}
