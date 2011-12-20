@@ -112,7 +112,7 @@ def _parse_filter():
 
     contains = request.args.get('contains')
     if contains:
-        filter['db']['message'] = {'$regex': '%s' % contains}
+        filter['db']['$or'] = [{'message': {'$regex': '%s' % contains}}, {'exception.stackTrace': {'$regex': '%s' % contains}},{'exception.message': {'$regex': '%s' % contains}}]
         filter['raw']['contains'] = contains
 
     for f in ['fileName', 'method']:
