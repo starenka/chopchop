@@ -12,47 +12,14 @@ import datetime, sys
 from bson.timestamp import Timestamp
 from pymongo.objectid import ObjectId
 from flask import Flask, render_template, request
-from mongokit import Connection
-
-from threading import currentThread
 
 from filters import datetimeformat, filename
+from mongopool import ConnectionPool
 
 app = Flask(__name__)
 app.config.from_object('settings')
 app.jinja_env.filters['datetimeformat'] = datetimeformat
 app.jinja_env.filters['filename'] = filename
-
-class ConnectionPool(object):
-    def __init__(self):
-        super(ConnectionPool, self).__init__()
-
-        self.pool = {}
-
-    def make_connection(self):
-        con = Connection(app.config['MONGODB_HOST'], app.config['MONGODB_PORT'])
-        db = con[app.config['MONGODB_NAME']]
-        if app.config['MONGODB_USER'] and app.config['MONGODB_PASSWORD']:
-            auth = db.authenticate(app.config['MONGODB_USER'], app.config['MONGODB_PASSWORD'])
-            if not auth:
-                raise AssertionError('Failed to auth to %s:%s/%s as %s' % (
-                    app.config['MONGODB_HOST'],
-                    app.config['MONGODB_PORT'],
-                    app.config['MONGODB_NAME'],
-                    app.config['MONGODB_USER'])
-                )
-        db = db[app.config['MONGODB_TABLE']]
-        return db
-
-    def get_connection(self):
-        if currentThread() not in self.pool:
-            self.pool[currentThread()] = self.make_connection()
-
-        return self.pool[currentThread()]
-
-    @property
-    def con(self):
-        return self.get_connection()
 
 db = ConnectionPool()
 
