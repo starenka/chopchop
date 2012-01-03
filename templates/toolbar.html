@@ -5,40 +5,48 @@
 	<div id="jumpto">
 		<table>
 			<tr>
-				<td colspan="8" align="right">
+				<td colspan="2">
 					<!--<a id="refresh">
 						<img src="{{ url_for('static', filename='gfx/load_small.png') }}"/>&nbsp;refresh
 					</a>
 					-->
-					<a id="show-more-qry">
-						<img src="{{ url_for('static', filename='gfx/run_small.png') }}"/>&nbsp;show query
-					</a>
 					<a id="reset">
 						<img src="{{ url_for('static', filename='gfx/delete_small.png') }}"/>&nbsp;reset filters
 					</a>
 					<a id="show-more-filter">
 						<img src="{{ url_for('static', filename='gfx/add_small.png') }}"/>&nbsp;toggle advanced filters
 					</a>
+                    <a id="show-more-qry">
+                        <img src="{{ url_for('static', filename='gfx/run_small.png') }}"/>&nbsp;show query
+                    </a>
 				</td>
 			</tr>
-			<tr>
-				<td><label for="projects">Projects:</label></td>
-				<td><input id="projects" type="search" class="input" value="{{filter.projects}}" placeholder="project name[,another one]" name="projects"/></td>
-				<td><label for=contains">Contains <small>*<a href="http://www.pcre.org/pcre.txt">PCRE</a></small>:</label></td>
-				<td><input id="contains" type="search" class="input" value="{{filter.contains}}" placeholder="HTTP.*?404" name="contains"/></td>
-				<td><label for="start">From:</label></td>
-				<td><input type="search" value="{{filter.start}}" class="input smaller" placeholder="YYYY-MM-DD [HH:MM:SS]" name="start"/></td>
-				<td><label for="end">To:</label></td>
-				<td><input type="search" value="{{filter.end}}" class="input smaller" placeholder="YYYY-MM-DD [HH:MM:SS]" name="end"/></td>
-			</tr>
-			<tr id="more-filter" {% if basic %}style="display:none;"{% endif %}>
-				<td><label for="fileName">File <small>*<a href="http://www.pcre.org/pcre.txt">PCRE</a></small>:</label></td>
+            <tr>
+                <td><label for="grep">Grep all fields:</label></td>
+                 <td><input id="grep" type="search" class="input" value="{{filter.grep}}" placeholder=".*LOL.*" name="grep"/></td>
+            </tr>
+            <tr><td colspan="2">All but date fields except valid <a href="http://www.mongodb.org/display/DOCS/Advanced+Queries#AdvancedQueries-RegularExpressions" target="_blank">Mongo</a> flavoured <a target="_blank" href="http://www.pcre.org/pcre.txt">PCRE</a> regexp.</td></tr>
+		<table id="more-filter" {% if basic %}style="display:none;"{% endif %}>
+            <tr>
+                <td><label for="project">Project:</label></td>
+                <td><input id="project" type="search" class="input" value="{{filter.loggerName}}" placeholder=".*LOL.*" name="loggerName"/></td>
+                <td><label for="message">Message:</label></td>
+                <td><input id="message" type="search" class="input" value="{{filter.message}}" placeholder="HTTP.*?404" name="message"/></td>
+            </tr>
+            <tr>
+                <td><label for="start">From:</label></td>
+                <td><input type="search" value="{{filter.start}}" class="input" placeholder="YYYY-MM-DD [HH:MM:SS]" name="start" id="start" /></td>
+                <td><label for="end">To:</label></td>
+                <td><input type="search" value="{{filter.end}}" class="input" placeholder="YYYY-MM-DD [HH:MM:SS]" name="end" id="end" /></td>
+            </tr>
+            <tr>
+				<td><label for="fileName">File:</label></td>
 				<td><input id="fileName" type="search" class="input" value="{{filter.fileName}}" placeholder="e.*py" name="fileName"/></td>
-				<td><label for="method">Function <small>*<a href="http://www.pcre.org/pcre.txt">PCRE</a></small>:</label></td>
+				<td><label for="method">Function:</label></td>
 				<td><input id="method" type="search" class="input" value="{{filter.method}}" placeholder="get_.*burger" name="method"/></td>
 				<td colspan="4"></td>
 			</tr>
 		</table>
-	</div>		
+	</div>
 </ul>
 <div id="more-qry" style="display:none;"><code>{{query}}</code></div>

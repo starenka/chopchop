@@ -5,7 +5,7 @@
 # 
 # @author:     starenka
 # @email:      'moc]tod[liamg].T.E[0aknerats'[::-1]
-# @version:    1.1.1
+# @version:    1.2
 # @since       Nov 24, 2010
 
 import datetime, sys
@@ -27,9 +27,9 @@ db = ConnectionPool()
 def index():
     filter = _parse_filter()
     q = db.con.find(filter['db']).\
-        sort(filter['sort']['by'], filter['sort']['direction']).\
-        skip(filter['pagination']['offset'] * filter['pagination']['per_page']).\
-        limit(filter['pagination']['per_page'])
+    sort(filter['sort']['by'], filter['sort']['direction']).\
+    skip(filter['pagination']['offset'] * filter['pagination']['per_page']).\
+    limit(filter['pagination']['per_page'])
     filter['pagination']['total'] = db.con.find(filter['db']).count()
     return render_template('dashboard.html', items=list(q),
                            query=q._Cursor__spec,
@@ -72,17 +72,28 @@ def _parse_filter():
     offset = request.args.get('offset')
     if offset and offset.isdigit(): filter['pagination']['offset'] = int(offset)
 
-    projects = request.args.get('projects') and request.args.get('projects').replace(', ', ',')
-    if projects:
-        filter['db']['loggerName'] = {'$in': projects.split(',')}
-        filter['raw']['projects'] = projects
+    grep = request.args.get('grep')
+    if grep:
+        filter['db']['$or'] = [{'message': {'$regex': '%s' % grep}},
+                {'exception.stackTrace': {'$regex': '%s' % grep}},
+                {'exception.message': {'$regex': '%s' % grep}},
+                {'exception.message': {'$regex': '%s' % grep}},
+                {'loggerName': {'$regex': '%s' % grep}},
+                {'method': {'$regex': '%s' % grep}},
+                {'fileName': {'$regex': '%s' % grep}},
+        ]
+        filter['raw']['grep'] = grep
 
-    contains = request.args.get('contains')
-    if contains:
-        filter['db']['$or'] = [{'message': {'$regex': '%s' % contains}}, {'exception.stackTrace': {'$regex': '%s' % contains}},{'exception.message': {'$regex': '%s' % contains}}]
-        filter['raw']['contains'] = contains
+    message = request.args.get('message')
+    if message:
+        filter['basic'] = False
+        filter['db']['$or'] = [{'message': {'$regex': '%s' % message}},
+                {'exception.stackTrace': {'$regex': '%s' % message}},
+                {'exception.message': {'$regex': '%s' % message}}
+        ]
+        filter['raw']['message'] = message
 
-    for f in ['fileName', 'method']:
+    for f in ['fileName', 'method', 'loggerName']:
         val = request.args.get(f)
         if val:
             filter['basic'] = False
@@ -92,10 +103,9 @@ def _parse_filter():
     for field, op in {'start': 'g', 'end': 'l'}.items():
         setattr(sys.modules[__name__], field, _parse_date(request.args.get(field)))
         if getattr(sys.modules[__name__], field):
-            filter['db']['timestamp'] = {'$%ste' % op: Timestamp(getattr(sys.modules[__name__], field),0)}
+            filter['basic'] = False
+            filter['db']['timestamp'] = {'$%ste' % op: Timestamp(getattr(sys.modules[__name__], field), 0)}
             filter['raw'][field] = getattr(sys.modules[__name__], field).strftime('%Y-%m-%d %H:%M')
-
-    if start and end: filter['db']['timestamp'] = {'$gte': start, '$lte': end}
 
     return filter
 
