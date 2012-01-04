@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-	<h2>Logged errors for<em>{% if filter.projects %}: {{filter.projects}}
+	<h2>Logged errors for<em>{% if filter.loggerName %}: {{ filter.loggerName }}
 	{% else %} any project {% endif %}</em></h2>
 	{% include 'toolbar.html' %}
 	{% include 'items.html' %}
