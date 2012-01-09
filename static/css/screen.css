@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 /* General styles */
 
 html, body { color: #000; font: normal 90% Arial,Helvetica,sans-serif;
-  height: 100%; margin: 0; padding: 0; overflow: hidden;
+  height: 100%; margin: 0; padding: 0;
 }
 :link, :visited { color: #ba1e16; text-decoration: none; }
 :link img, :visited img { border: none; }
@@ -24,7 +24,7 @@ html, body { color: #000; font: normal 90% Arial,Helvetica,sans-serif;
 h1 { background: #333; border-right: 2px solid #111;
   border-bottom: 1px solid #333; color: #999;
   font: normal 125% Arial,Helvetica,sans-serif; height: 32px;
-  line-height: 32px; margin: 0; padding: 0 0 0 .5em; position: relative;
+  line-height: 32px; margin: 0; padding: 0 0 0 .5em;
 }
 h1 :link, h1 :visited, h1 strong { padding: .4em .5em; }
 h1 :link, h1 :visited {
@@ -220,9 +220,7 @@ body.fullwidth #sidebar { border-bottom: 1px solid #333; right: 0;
   height: 100%; margin-right: 210px; position: relative;
 }
 body.fullwidth #wrap { margin-right: 0; }
-#content { padding: 1em 16px 3em 10px; overflow: auto; overflow-y: scroll;
-  position: absolute; top: 33px; bottom: 0; left: 0; right: 0;
-}
+#content { padding: 1em 16px 3em 10px; }
 
 /* Toolbar */
 
